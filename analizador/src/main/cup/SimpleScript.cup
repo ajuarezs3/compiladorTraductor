@@ -21,8 +21,14 @@ parser code
     }
 
     public static void main(String[] args) throws Exception {
-        parser p = new parser(new AnalizadorLexico(new java.io.FileReader("entrada.ss")));
-        p.parse();
+        try {
+            parser p = new parser(new AnalizadorLexico(new java.io.FileReader("entrada.ss")));
+            p.parse();
+            System.out.println("\n✅ Código analizado correctamente.");
+        } catch (Exception e) {
+            System.err.println("❌ Error en el análisis del código:");
+            e.printStackTrace();
+        }
     }
 :};
 
@@ -43,7 +49,8 @@ terminal String ID, CADENA;
 
 // No terminales
 non terminal programa, bloque, sentencia, lista_sentencias, lista_elseif, lista_expresiones;
-non terminal String expr, expr_logica, expr_logica_aux, expr_relacional, expr_relacional_aux, expr_aritmetica, expr_aritmetica_aux, expr_primaria;
+non terminal String expr, expr_logica, expr_logica_aux, expr_relacional, expr_relacional_aux;
+non terminal String expr_aritmetica, expr_aritmetica_aux, expr_primaria;
 
 start with programa;
 
@@ -54,26 +61,14 @@ bloque ::= lista_sentencias ;
 lista_sentencias ::= lista_sentencias sentencia
                    | sentencia ;
 
-sentencia ::= DEFINE ID ASSIGN expr SEMI
-            {: System.out.println(parser.newTemp() + " = " + $4);
-               System.out.println($2 + " = " + parser.newTemp()); :}
-           | PRINT expr SEMI
-            {: System.out.println("print " + $2); :}
-           | IF expr bloque ELSE bloque END
-            {: System.out.println("Condicional IF-ELSE evaluado"); :}
-           | IF expr bloque END
-            {: System.out.println("Condicional IF evaluado"); :}
-           | IF expr bloque lista_elseif ELSE bloque END
-            {: System.out.println("Condicional IF-ELSEIF-ELSE evaluado"); :}
-           | WHILE expr bloque END
-            {: System.out.println("Bucle WHILE evaluado"); :}
-           | LOOP LPAREN sentencia expr sentencia RPAREN bloque END
-            {: System.out.println("Bucle tipo FOR evaluado"); :}
-           | FUNCTION ID LPAREN lista_expresiones RPAREN bloque RETURN expr SEMI END
-            {: System.out.println("Función " + $2 + " definida"); :}
-           | error SEMI
-            {: System.err.println("Error de sintaxis en sentencia en línea "
-                    + parser.getLine()); :};
+sentencia ::= DEFINE ID:id ASSIGN expr:ex SEMI
+            {:
+               String temp = parser.newTemp();
+               System.out.println(temp + " = " + ex);
+               System.out.println(id + " = " + temp);
+            :}
+           | PRINT expr:ex SEMI
+            {: System.out.println("print " + ex); :};
 
 lista_elseif ::= lista_elseif ELSEIF expr bloque
                | ELSEIF expr bloque ;
@@ -84,39 +79,38 @@ lista_expresiones ::= lista_expresiones COMMA expr
 
 expr ::= expr_logica;
 
-expr_logica ::= NOT expr_logica {: RESULT = "NOT " + $2; :}
-              | expr_relacional expr_logica_aux {: RESULT = $1 + $2; :};
+expr_logica ::= NOT expr_logica:ex {: RESULT = "NOT " + ex; :}
+              | expr_relacional:er expr_logica_aux:aux {: RESULT = er + aux; :};
 
-
-expr_logica_aux ::= AND expr_relacional expr_logica_aux {: RESULT = " AND " + $2 + $3; :}
-                  | OR expr_relacional expr_logica_aux {: RESULT = " OR " + $2 + $3; :}
+expr_logica_aux ::= AND expr_relacional:r expr_logica_aux:aux {: RESULT = " AND " + r + aux; :}
+                  | OR expr_relacional:r expr_logica_aux:aux {: RESULT = " OR " + r + aux; :}
                   | /* vacío */ {: RESULT = ""; :};
 
-expr_relacional ::= expr_aritmetica expr_relacional_aux {: RESULT = $1 + $2; :};
+expr_relacional ::= expr_aritmetica:ea expr_relacional_aux:ra {: RESULT = ea + ra; :};
 
-expr_relacional_aux ::= EQ expr_aritmetica {: RESULT = " == " + $2; :}
-                      | NEQ expr_aritmetica {: RESULT = " != " + $2; :}
-                      | LT expr_aritmetica {: RESULT = " < " + $2; :}
-                      | GT expr_aritmetica {: RESULT = " > " + $2; :}
-                      | LEQ expr_aritmetica {: RESULT = " <= " + $2; :}
-                      | GEQ expr_aritmetica {: RESULT = " >= " + $2; :}
+expr_relacional_aux ::= EQ expr_aritmetica:r {: RESULT = " == " + r; :}
+                      | NEQ expr_aritmetica:r {: RESULT = " != " + r; :}
+                      | LT expr_aritmetica:r {: RESULT = " < " + r; :}
+                      | GT expr_aritmetica:r {: RESULT = " > " + r; :}
+                      | LEQ expr_aritmetica:r {: RESULT = " <= " + r; :}
+                      | GEQ expr_aritmetica:r {: RESULT = " >= " + r; :}
                       | /* vacío */ {: RESULT = ""; :};
 
-expr_aritmetica ::= expr_primaria expr_aritmetica_aux {: RESULT = $1 + $2; :};
+expr_aritmetica ::= expr_primaria:e expr_aritmetica_aux:ax {: RESULT = e + ax; :};
 
-expr_aritmetica_aux ::= PLUS expr_primaria expr_aritmetica_aux
-    {: String t = parser.newTemp(); System.out.println(t + " = " + $0 + " + " + $2); RESULT = " + " + $2 + $3; :}
-                      | MINUS expr_primaria expr_aritmetica_aux
-    {: String t = parser.newTemp(); System.out.println(t + " = " + $0 + " - " + $2); RESULT = " - " + $2 + $3; :}
-                      | MULT expr_primaria expr_aritmetica_aux
-    {: String t = parser.newTemp(); System.out.println(t + " = " + $0 + " * " + $2); RESULT = " * " + $2 + $3; :}
-                      | DIV expr_primaria expr_aritmetica_aux
-    {: String t = parser.newTemp(); System.out.println(t + " = " + $0 + " / " + $2); RESULT = " / " + $2 + $3; :}
+expr_aritmetica_aux ::= PLUS expr_primaria:p expr_aritmetica_aux:ax
+    {: String t = parser.newTemp(); System.out.println(t + " = resultadoPrevio + " + p); RESULT = " + " + p + ax; :}
+                      | MINUS expr_primaria:p expr_aritmetica_aux:ax
+    {: String t = parser.newTemp(); System.out.println(t + " = resultadoPrevio - " + p); RESULT = " - " + p + ax; :}
+                      | MULT expr_primaria:p expr_aritmetica_aux:ax
+    {: String t = parser.newTemp(); System.out.println(t + " = resultadoPrevio * " + p); RESULT = " * " + p + ax; :}
+                      | DIV expr_primaria:p expr_aritmetica_aux:ax
+    {: String t = parser.newTemp(); System.out.println(t + " = resultadoPrevio / " + p); RESULT = " / " + p + ax; :}
                       | /* vacío */ {: RESULT = ""; :};
 
-expr_primaria ::= LPAREN expr RPAREN {: RESULT = "(" + $2 + ")"; :}
-                | NUMERO {: RESULT = String.valueOf($1); :}
-                | ID {: RESULT = $1; :}
+expr_primaria ::= LPAREN expr:ex RPAREN {: RESULT = "(" + ex + ")"; :}
+                | NUMERO:n {: RESULT = String.valueOf(n); :}
+                | ID:id {: RESULT = id; :}
                 | TRUE {: RESULT = "true"; :}
                 | FALSE {: RESULT = "false"; :}
-                | CADENA {: RESULT = $1; :};
+                | CADENA:c {: RESULT = c; :};
