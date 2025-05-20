@@ -25,9 +25,9 @@ parser code
         try {
             parser p = new parser(new AnalizadorLexico(new java.io.FileReader("entrada.ss")));
             p.parse();
-            System.out.println("\nCódigo analizado correctamente.");
+            System.out.println("\n✅ Código analizado correctamente.");
         } catch (Exception e) {
-            System.err.println("Error en el análisis del código:");
+            System.err.println("❌ Error en el análisis del código:");
             e.printStackTrace();
         }
     }
@@ -100,13 +100,29 @@ expr_relacional_aux ::= EQ expr_aritmetica:r {: RESULT = " == " + r; :}
 expr_aritmetica ::= expr_primaria:e expr_aritmetica_aux:ax {: RESULT = e + ax; :};
 
 expr_aritmetica_aux ::= PLUS expr_primaria:p expr_aritmetica_aux:ax
-    {: String t = parser.newTemp(); System.out.println(t + " = resultadoPrevio + " + p); RESULT = " + " + p + ax; :}
+    {:
+      String t = parser.newTemp();
+      System.out.println(t + " = " + p + " + " + ax);
+      RESULT = t;
+    :}
                       | MINUS expr_primaria:p expr_aritmetica_aux:ax
-    {: String t = parser.newTemp(); System.out.println(t + " = resultadoPrevio - " + p); RESULT = " - " + p + ax; :}
+    {:
+      String t = parser.newTemp();
+      System.out.println(t + " = " + p + " - " + ax);
+      RESULT = t;
+    :}
                       | MULT expr_primaria:p expr_aritmetica_aux:ax
-    {: String t = parser.newTemp(); System.out.println(t + " = resultadoPrevio * " + p); RESULT = " * " + p + ax; :}
+    {:
+      String t = parser.newTemp();
+      System.out.println(t + " = " + p + " * " + ax);
+      RESULT = t;
+    :}
                       | DIV expr_primaria:p expr_aritmetica_aux:ax
-    {: String t = parser.newTemp(); System.out.println(t + " = resultadoPrevio / " + p); RESULT = " / " + p + ax; :}
+    {:
+      String t = parser.newTemp();
+      System.out.println(t + " = " + p + " / " + ax);
+      RESULT = t;
+    :}
                       | /* vacío */ {: RESULT = ""; :};
 
 expr_primaria ::= LPAREN expr:ex RPAREN {: RESULT = "(" + ex + ")"; :}

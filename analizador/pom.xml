@@ -38,8 +38,8 @@
             <!-- Plugin para JFlex -->
             <plugin>
                 <groupId>de.jflex</groupId>
-                <artifactId>jflex-maven-plugin</artifactId>
-                <version>1.9.1</version>
+                <artifactId>cup-maven-plugin</artifactId>
+                <version>1.3</version>
                 <executions>
                     <execution>
                         <goals>
@@ -50,8 +50,8 @@
             </plugin>
             <plugin>
                 <groupId>de.jflex</groupId>
-                <artifactId>cup-maven-plugin</artifactId>
-                <version>1.3</version>
+                <artifactId>jflex-maven-plugin</artifactId>
+                <version>1.9.1</version>
                 <executions>
                     <execution>
                         <goals>

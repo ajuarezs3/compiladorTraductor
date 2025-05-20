@@ -1,4 +1,3 @@
-// Código de usuario
 package org.example;
 
 import java_cup.runtime.Symbol;
@@ -6,7 +5,6 @@ import org.example.sym;
 
 %%
 
-// Opciones de JFlex
 %class AnalizadorLexico
 %unicode
 %cup
@@ -25,7 +23,6 @@ import org.example.sym;
     }
 %}
 
-// Expresiones regulares
 espacio = [ \t\r\n]+
 entero = [0-9]+
 decimal = {entero}"."{entero}
@@ -68,8 +65,17 @@ cadena = \"([^\"\\]|\\.)*\"
 "=="                            { return new Symbol(sym.EQ); }
 "!="                            { return new Symbol(sym.NEQ); }
 "<"                             { return new Symbol(sym.LT); }
-">"
+">"                             { return new Symbol(sym.GT); }
 
+// Otros tokens
+{cadena}                        { return new Symbol(sym.CADENA, yytext()); }
+{id}                           { return new Symbol(sym.ID, yytext()); }
+{numero}                       { return new Symbol(sym.NUMERO, Double.parseDouble(yytext())); }
+
+// Ignorar espacios
+{espacio}                      { /* Ignorar espacios y saltos de línea */ }
+
+// Error léxico
 . {
     System.err.println("Error léxico: caracter no válido '" + yytext() + "' en línea " + (yyline + 1));
     return new Symbol(sym.error);
