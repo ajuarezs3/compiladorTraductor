@@ -2,6 +2,7 @@
 package org.example;
 
 import java_cup.runtime.Symbol;
+import org.example.sym;
 
 %%
 
@@ -37,39 +38,39 @@ cadena = \"([^\"\\]|\\.)*\"
 
 {espacio}                       { /* ignorar */ }
 
-"DEFINE"                        { return new Symbol(Sym.DEFINE); }
-"PRINT"                         { return new Symbol(Sym.PRINT); }
-"IF"                            { return new Symbol(Sym.IF); }
-"ELSE"                          { return new Symbol(Sym.ELSE); }
-"ELSEIF"                        { return new Symbol(Sym.ELSEIF); }
-"WHILE"                         { return new Symbol(Sym.WHILE); }
-"LOOP"                          { return new Symbol(Sym.LOOP); }
-"FUNCTION"                      { return new Symbol(Sym.FUNCTION); }
-"RETURN"                        { return new Symbol(Sym.RETURN); }
-"END"                           { return new Symbol(Sym.END); }
-"true"                          { return new Symbol(Sym.TRUE, true); }
-"false"                         { return new Symbol(Sym.FALSE, false); }
+"DEFINE"                        { return new Symbol(sym.DEFINE); }
+"PRINT"                         { return new Symbol(sym.PRINT); }
+"IF"                            { return new Symbol(sym.IF); }
+"ELSE"                          { return new Symbol(sym.ELSE); }
+"ELSEIF"                        { return new Symbol(sym.ELSEIF); }
+"WHILE"                         { return new Symbol(sym.WHILE); }
+"LOOP"                          { return new Symbol(sym.LOOP); }
+"FUNCTION"                      { return new Symbol(sym.FUNCTION); }
+"RETURN"                        { return new Symbol(sym.RETURN); }
+"END"                           { return new Symbol(sym.END); }
+"true"                          { return new Symbol(sym.TRUE, true); }
+"false"                         { return new Symbol(sym.FALSE, false); }
 
 // Operadores lógicos
-"AND"                           { return new Symbol(Sym.AND); }
-"OR"                            { return new Symbol(Sym.OR); }
-"NOT"                           { return new Symbol(Sym.NOT); }
+"AND"                           { return new Symbol(sym.AND); }
+"OR"                            { return new Symbol(sym.OR); }
+"NOT"                           { return new Symbol(sym.NOT); }
 
 // Operadores aritméticos
-"+"                             { return new Symbol(Sym.PLUS); }
-"-"                             { return new Symbol(Sym.MINUS); }
-"*"                             { return new Symbol(Sym.MULT); }
-"/"                             { return new Symbol(Sym.DIV); }
+"+"                             { return new Symbol(sym.PLUS); }
+"-"                             { return new Symbol(sym.MINUS); }
+"*"                             { return new Symbol(sym.MULT); }
+"/"                             { return new Symbol(sym.DIV); }
 
 // Operadores relacionales
-"<="                            { return new Symbol(Sym.LEQ); }
-">="                            { return new Symbol(Sym.GEQ); }
-"=="                            { return new Symbol(Sym.EQ); }
-"!="                            { return new Symbol(Sym.NEQ); }
-"<"                             { return new Symbol(Sym.LT); }
+"<="                            { return new Symbol(sym.LEQ); }
+">="                            { return new Symbol(sym.GEQ); }
+"=="                            { return new Symbol(sym.EQ); }
+"!="                            { return new Symbol(sym.NEQ); }
+"<"                             { return new Symbol(sym.LT); }
 ">"
 
 . {
     System.err.println("Error léxico: caracter no válido '" + yytext() + "' en línea " + (yyline + 1));
-    return new Symbol(Sym.error);
+    return new Symbol(sym.error);
 }

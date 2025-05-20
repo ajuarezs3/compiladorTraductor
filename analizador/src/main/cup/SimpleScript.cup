@@ -1,7 +1,7 @@
 package org.example;
 
 import java_cup.runtime.*;
-import org.example.Sym;
+import org.example.sym;
 
 parser code
 {:
