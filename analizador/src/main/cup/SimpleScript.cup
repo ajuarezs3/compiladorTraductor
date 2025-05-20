@@ -35,7 +35,7 @@ parser code
 
 action code
 {:
-    // Aquí podrías manejar un generador de código TAC
+    // Aquí puedes generar código intermedio o TAC
 :};
 
 // Declaración de tokens
@@ -49,7 +49,7 @@ terminal Double NUMERO;
 terminal String ID, CADENA;
 
 // No terminales
-non terminal programa, bloque, sentencia, lista_sentencias, lista_elseif, lista_expresiones;
+non terminal programa, bloque, sentencia, lista_sentencias, lista_elseif, lista_expresiones, lista_parametros;
 non terminal String expr, expr_logica, expr_logica_aux, expr_relacional, expr_relacional_aux;
 non terminal String expr_aritmetica, expr_aritmetica_aux, expr_primaria;
 
@@ -80,13 +80,17 @@ sentencia ::= DEFINE ID:id ASSIGN expr:ex SEMI
             {: System.out.println("Bucle WHILE evaluado"); :}
            | LOOP LPAREN sentencia expr sentencia RPAREN bloque END
             {: System.out.println("Bucle tipo FOR evaluado"); :}
-           | FUNCTION ID:id LPAREN lista_expresiones RPAREN bloque RETURN expr:ex SEMI END
-            {: System.out.println("Función " + id + " definida con return " + ex); :}
+           | FUNCTION ID:id LPAREN lista_parametros RPAREN bloque RETURN expr:ex SEMI END
+            {: System.out.println("Función " + id + " definida con parámetros y return " + ex); :}
            | error SEMI
             {: System.err.println("Error de sintaxis en sentencia en línea " + parser.getLine()); :};
 
 lista_elseif ::= lista_elseif ELSEIF expr bloque
                | ELSEIF expr bloque ;
+
+lista_parametros ::= lista_parametros COMMA ID
+                  | ID
+                  | /* vacío */ ;
 
 lista_expresiones ::= lista_expresiones COMMA expr
                     | expr

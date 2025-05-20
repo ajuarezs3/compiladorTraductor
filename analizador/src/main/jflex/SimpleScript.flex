@@ -67,6 +67,12 @@ cadena = \"([^\"\\]|\\.)*\"
 "<"                             { return new Symbol(sym.LT); }
 ">"                             { return new Symbol(sym.GT); }
 
+"("                             { return new Symbol(sym.LPAREN); }
+")"                             { return new Symbol(sym.RPAREN); }
+";"                             { return new Symbol(sym.SEMI); }
+","                             { return new Symbol(sym.COMMA); }
+"="                             { return new Symbol(sym.ASSIGN); }
+
 // Otros tokens
 {cadena}                        { return new Symbol(sym.CADENA, yytext()); }
 {id}                           { return new Symbol(sym.ID, yytext()); }
