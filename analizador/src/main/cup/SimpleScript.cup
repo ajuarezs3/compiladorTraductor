@@ -69,7 +69,21 @@ sentencia ::= DEFINE ID:id ASSIGN expr:ex SEMI
                System.out.println(id + " = " + temp);
             :}
            | PRINT expr:ex SEMI
-            {: System.out.println("print " + ex); :};
+            {: System.out.println("print " + ex); :}
+           | IF expr bloque lista_elseif ELSE bloque END
+            {: System.out.println("Condicional IF-ELSEIF-ELSE evaluado"); :}
+           | IF expr bloque ELSE bloque END
+            {: System.out.println("Condicional IF-ELSE evaluado"); :}
+           | IF expr bloque END
+            {: System.out.println("Condicional IF evaluado"); :}
+           | WHILE expr bloque END
+            {: System.out.println("Bucle WHILE evaluado"); :}
+           | LOOP LPAREN sentencia expr sentencia RPAREN bloque END
+            {: System.out.println("Bucle tipo FOR evaluado"); :}
+           | FUNCTION ID:id LPAREN lista_expresiones RPAREN bloque RETURN expr:ex SEMI END
+            {: System.out.println("Función " + id + " definida con return " + ex); :}
+           | error SEMI
+            {: System.err.println("Error de sintaxis en sentencia en línea " + parser.getLine()); :};
 
 lista_elseif ::= lista_elseif ELSEIF expr bloque
                | ELSEIF expr bloque ;
