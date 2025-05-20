@@ -1,45 +1,66 @@
+// Código de usuario
+package org.example;
+
+import java_cup.runtime.Symbol;
+
 %%
 
-%class SimpleScriptLexer
+// Opciones de JFlex
+%class AnalizadorLexico
 %unicode
 %cup
 %public
+%char
 %line
 %column
 
+%{
+    public Symbol getToken(int tipo, Object valor) {
+        return new Symbol(tipo, yyline, yycolumn, valor);
+    }
+%}
+
+// Expresiones regulares
+espacio = [ \t\r\n]+
+entero = [0-9]+
+decimal = {entero}"."{entero}
+numero = {decimal}|{entero}
+id = [a-zA-Z_][a-zA-Z0-9_]*
+cadena = \"([^\"\\]|\\.)*\"
+
 // Palabras clave
-DEFINE      = "DEFINE"
-PRINT       = "PRINT"
-IF          = "IF"
-ELSE        = "ELSE"
-ELSEIF      = "ELSEIF"
-WHILE       = "WHILE"
-LOOP        = "LOOP"
-FUNCTION    = "FUNCTION"
-RETURN      = "RETURN"
-END         = "END"
-
-// Otros tokens
-NUMERO      = [0-9]+(\.[0-9]+)?
-ID          = [a-zA-Z_][a-zA-Z0-9_]*
-CADENA      = \"([^\\\"]|\\.)*\"
-
-// Operadores
-ESPACIO     = [ \t\r\n]+
-COMENTARIO  = "//".*
-
 %%
 
-{DEFINE}    { return sym(Sym.DEFINE); }
-{PRINT}     { return sym(Sym.PRINT); }
-{IF}        { return sym(Sym.IF); }
-// Agrega los demás tokens igual...
+{espacio}                       { /* ignorar */ }
 
-{NUMERO}    { return sym(Sym.NUMERO, Double.valueOf(yytext())); }
-{CADENA}    { return sym(Sym.CADENA, yytext()); }
-{ID}        { return sym(Sym.ID, yytext()); }
+"DEFINE"                        { return new Symbol(Sym.DEFINE); }
+"PRINT"                         { return new Symbol(Sym.PRINT); }
+"IF"                            { return new Symbol(Sym.IF); }
+"ELSE"                          { return new Symbol(Sym.ELSE); }
+"ELSEIF"                        { return new Symbol(Sym.ELSEIF); }
+"WHILE"                         { return new Symbol(Sym.WHILE); }
+"LOOP"                          { return new Symbol(Sym.LOOP); }
+"FUNCTION"                      { return new Symbol(Sym.FUNCTION); }
+"RETURN"                        { return new Symbol(Sym.RETURN); }
+"END"                           { return new Symbol(Sym.END); }
+"true"                          { return new Symbol(Sym.TRUE, true); }
+"false"                         { return new Symbol(Sym.FALSE, false); }
 
-{ESPACIO}   { /* ignorar */ }
-{COMENTARIO} { /* ignorar */ }
+// Operadores lógicos
+"AND"                           { return new Symbol(Sym.AND); }
+"OR"                            { return new Symbol(Sym.OR); }
+"NOT"                           { return new Symbol(Sym.NOT); }
 
-.           { System.err.println("Caracter inválido: " + yytext()); }
+// Operadores aritméticos
+"+"                             { return new Symbol(Sym.PLUS); }
+"-"                             { return new Symbol(Sym.MINUS); }
+"*"                             { return new Symbol(Sym.MULT); }
+"/"                             { return new Symbol(Sym.DIV); }
+
+// Operadores relacionales
+"<="                            { return new Symbol(Sym.LEQ); }
+">="                            { return new Symbol(Sym.GEQ); }
+"=="                            { return new Symbol(Sym.EQ); }
+"!="                            { return new Symbol(Sym.NEQ); }
+"<"                             { return new Symbol(Sym.LT); }
+">"
