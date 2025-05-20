@@ -18,6 +18,10 @@ import java_cup.runtime.Symbol;
     public Symbol getToken(int tipo, Object valor) {
         return new Symbol(tipo, yyline, yycolumn, valor);
     }
+
+    public int getLine() {
+        return yyline + 1;
+    }
 %}
 
 // Expresiones regulares
@@ -64,3 +68,8 @@ cadena = \"([^\"\\]|\\.)*\"
 "!="                            { return new Symbol(Sym.NEQ); }
 "<"                             { return new Symbol(Sym.LT); }
 ">"
+
+. {
+    System.err.println("Error léxico: caracter no válido '" + yytext() + "' en línea " + (yyline + 1));
+    return new Symbol(Sym.error);
+}
