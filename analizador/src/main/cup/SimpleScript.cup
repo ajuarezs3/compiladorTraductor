@@ -13,7 +13,8 @@ parser code
     }
 
     public parser(AnalizadorLexico s) {
-        this(scanner = s);
+        super(s);
+        scanner = s;
     }
 
     public static int getLine() {
@@ -24,9 +25,9 @@ parser code
         try {
             parser p = new parser(new AnalizadorLexico(new java.io.FileReader("entrada.ss")));
             p.parse();
-            System.out.println("\n✅ Código analizado correctamente.");
+            System.out.println("\nCódigo analizado correctamente.");
         } catch (Exception e) {
-            System.err.println("❌ Error en el análisis del código:");
+            System.err.println("Error en el análisis del código:");
             e.printStackTrace();
         }
     }
