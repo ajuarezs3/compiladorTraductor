@@ -1,0 +1,20 @@
+parser code {:
+    public static void main(String[] args) throws Exception {
+        SimpleScriptLexer lexer = new SimpleScriptLexer(new java.io.FileReader("entrada.ss"));
+        parser p = new parser(lexer);
+        p.parse();
+    }
+:};
+
+terminal DEFINE, PRINT, IF, ELSE, ELSEIF, WHILE, LOOP, FUNCTION, RETURN, END;
+terminal Double NUMERO;
+terminal String ID, CADENA;
+
+non terminal programa;
+
+start with programa;
+
+programa ::=
+    DEFINE ID "=" expresion ";"
+    | PRINT CADENA ";"
+    ;
