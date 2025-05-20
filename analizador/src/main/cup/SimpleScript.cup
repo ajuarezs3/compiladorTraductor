@@ -5,6 +5,12 @@ import java_cup.runtime.*;
 
 parser code
 {:
+    public static int tempCount = 0;
+
+    public static String newTemp() {
+        return "t" + (tempCount++);
+    }
+
     public static void main(String[] args) throws Exception {
         parser p = new parser(new AnalizadorLexico(new java.io.FileReader("entrada.ss")));
         p.parse();
@@ -13,12 +19,11 @@ parser code
     public static int getLine() {
         return ((AnalizadorLexico)parser.getScanner()).getLine();
     }
-
 :};
 
 action code
 {:
-    // Puedes crear aquí estructuras para el AST o generación de código
+    // Aquí podrías manejar un generador de código TAC
 :};
 
 // Declaración de tokens
@@ -46,9 +51,10 @@ lista_sentencias ::= lista_sentencias sentencia
                    | sentencia ;
 
 sentencia ::= DEFINE ID ASSIGN expresion SEMI
-            {: System.out.println("Asignar: " + $2 + " = " + $4); :}
+            {: System.out.println(parser.newTemp() + " = " + $4);
+               System.out.println($2 + " = " + parser.newTemp()); :}
            | PRINT expresion SEMI
-            {: System.out.println("Imprimir: " + $2); :}
+            {: System.out.println("print " + $2); :}
            | IF expresion bloque ELSE bloque END
             {: System.out.println("Condicional IF-ELSE evaluado"); :}
            | IF expresion bloque END
@@ -74,10 +80,26 @@ lista_expresiones ::= lista_expresiones COMMA expresion
                     | expresion
                     | /* vacío */ ;
 
-expresion ::= expresion PLUS expresion {: RESULT = $1 + "+" + $3; :}
-           | expresion MINUS expresion {: RESULT = $1 + "-" + $3; :}
-           | expresion MULT expresion {: RESULT = $1 + "*" + $3; :}
-           | expresion DIV expresion {: RESULT = $1 + "/" + $3; :}
+expresion ::= expresion PLUS expresion {:
+                String t = parser.newTemp();
+                System.out.println(t + " = " + $1 + " + " + $3);
+                RESULT = t;
+            :}
+           | expresion MINUS expresion {:
+                String t = parser.newTemp();
+                System.out.println(t + " = " + $1 + " - " + $3);
+                RESULT = t;
+            :}
+           | expresion MULT expresion {:
+                String t = parser.newTemp();
+                System.out.println(t + " = " + $1 + " * " + $3);
+                RESULT = t;
+            :}
+           | expresion DIV expresion {:
+                String t = parser.newTemp();
+                System.out.println(t + " = " + $1 + " / " + $3);
+                RESULT = t;
+            :}
            | expresion EQ expresion {: RESULT = $1 + "==" + $3; :}
            | expresion NEQ expresion {: RESULT = $1 + "!=" + $3; :}
            | expresion LT expresion {: RESULT = $1 + "<" + $3; :}
