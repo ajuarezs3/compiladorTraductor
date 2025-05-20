@@ -27,7 +27,7 @@ terminal Double NUMERO;
 terminal String ID, CADENA;
 
 // No terminales
-non terminal programa, bloque, sentencia, lista_sentencias, lista_expresiones;
+non terminal programa, bloque, sentencia, lista_sentencias, lista_elseif, lista_expresiones;
 non terminal String expresion;
 
 start with programa;
@@ -45,20 +45,25 @@ sentencia ::= DEFINE ID ASSIGN expresion SEMI
            | PRINT expresion SEMI
             {: System.out.println("Imprimir: " + $2); :}
            | IF expresion bloque ELSE bloque END
-            {: System.out.println("Condicional if-else evaluado"); :}
+            {: System.out.println("Condicional IF-ELSE evaluado"); :}
            | IF expresion bloque END
-            {: System.out.println("Condicional if evaluado"); :}
+            {: System.out.println("Condicional IF evaluado"); :}
+           | IF expresion bloque lista_elseif ELSE bloque END
+            {: System.out.println("Condicional IF-ELSEIF-ELSE evaluado"); :}
            | WHILE expresion bloque END
-            {: System.out.println("Bucle while evaluado"); :}
+            {: System.out.println("Bucle WHILE evaluado"); :}
            | LOOP LPAREN sentencia expresion sentencia RPAREN bloque END
-            {: System.out.println("Bucle tipo for evaluado"); :}
+            {: System.out.println("Bucle tipo FOR evaluado"); :}
            | FUNCTION ID LPAREN lista_expresiones RPAREN bloque RETURN expresion SEMI END
             {: System.out.println("Función " + $2 + " definida"); :}
            | error SEMI
             {:
-                System.err.println("❌ Error de sintaxis en sentencia en línea "
+                System.err.println("Error de sintaxis en sentencia en línea "
                     + ((AnalizadorLexico)parser.getScanner()).getLine());
             :};
+
+lista_elseif ::= lista_elseif ELSEIF expresion bloque
+               | ELSEIF expresion bloque ;
 
 lista_expresiones ::= lista_expresiones COMMA expresion
                     | expresion
