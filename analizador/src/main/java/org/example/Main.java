@@ -1,17 +1,18 @@
 package org.example;
 
-import java.io.FileReader;
-import java.io.Reader;
-import java.io.IOException;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            Reader input = new FileReader("input.txt");
+            System.out.println("Analizador léxico inicializado correctamente");
+
+            Reader input = new FileReader("entrada.ss");
+
             AnalizadorLexico lexer = new AnalizadorLexico(input);
             parser parser = new parser(lexer);
             Object result = parser.parse().value;
-            System.out.println("✅ Código válido");
+            System.out.println("Código válido");
         } catch (FileNotFoundException e) {
             System.err.println("Archivo no encontrado: " + e.getMessage());
         } catch (IOException e) {
