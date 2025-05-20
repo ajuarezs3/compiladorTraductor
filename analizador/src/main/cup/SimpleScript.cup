@@ -9,6 +9,11 @@ parser code
         parser p = new parser(new AnalizadorLexico(new java.io.FileReader("entrada.ss")));
         p.parse();
     }
+
+    public static int getLine() {
+        return ((AnalizadorLexico)parser.getScanner()).getLine();
+    }
+
 :};
 
 action code
