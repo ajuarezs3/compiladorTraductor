@@ -1,23 +1,28 @@
 package org.example;
 
 import java_cup.runtime.*;
-import org.example.sym;
+import org.example.Sym;
 
 parser code
 {:
     public static int tempCount = 0;
+    private static AnalizadorLexico scanner;
 
     public static String newTemp() {
         return "t" + (tempCount++);
     }
 
-    public static void main(String[] args) throws Exception {
-        parser p = new parser(new AnalizadorLexico(new java.io.FileReader("entrada.ss")));
-        p.parse();
+    public parser(AnalizadorLexico s) {
+        this(scanner = s);
     }
 
     public static int getLine() {
-        return ((AnalizadorLexico)parser.getScanner()).getLine();
+        return scanner.getLine();
+    }
+
+    public static void main(String[] args) throws Exception {
+        parser p = new parser(new AnalizadorLexico(new java.io.FileReader("entrada.ss")));
+        p.parse();
     }
 :};
 
@@ -68,7 +73,7 @@ sentencia ::= DEFINE ID ASSIGN expr SEMI
             {: System.out.println("Función " + $2 + " definida"); :}
            | error SEMI
             {: System.err.println("Error de sintaxis en sentencia en línea "
-                    + ((AnalizadorLexico)parser.getScanner()).getLine()); :};
+                    + parser.getLine()); :};
 
 lista_elseif ::= lista_elseif ELSEIF expr bloque
                | ELSEIF expr bloque ;
@@ -79,7 +84,9 @@ lista_expresiones ::= lista_expresiones COMMA expr
 
 expr ::= expr_logica;
 
-expr_logica ::= expr_relacional expr_logica_aux {: RESULT = $1 + $2; :};
+expr_logica ::= NOT expr_logica {: RESULT = "NOT " + $2; :}
+              | expr_relacional expr_logica_aux {: RESULT = $1 + $2; :};
+
 
 expr_logica_aux ::= AND expr_relacional expr_logica_aux {: RESULT = " AND " + $2 + $3; :}
                   | OR expr_relacional expr_logica_aux {: RESULT = " OR " + $2 + $3; :}
