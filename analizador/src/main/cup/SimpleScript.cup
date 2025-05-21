@@ -3,11 +3,10 @@ package org.example;
 import java_cup.runtime.*;
 import org.example.sym;
 
-parser code
-{:
+parser code {:
     public static int tempCount = 0;
     public static int labelCount = 0;
-    private static AnalizadorLexico scanner;
+    private AnalizadorLexico scanner;
 
     public static String newTemp() {
         return "t" + (tempCount++);
@@ -17,19 +16,23 @@ parser code
         return "L" + (labelCount++);
     }
 
-    public static void setScanner(AnalizadorLexico s) {
-        scanner = s;
+    public int getLine() {
+        try {
+            return scanner != null ? scanner.getLine() : -1;
+        } catch (Exception e) {
+            return -1;
+        }
     }
 
-    public static int getLine() {
-        return scanner.getLine();
+    public parser(AnalizadorLexico s) {  // ✅ Nombre correcto
+        super(s);
+        this.scanner = s;
     }
 
     public static void main(String[] args) throws Exception {
         try {
             AnalizadorLexico lexer = new AnalizadorLexico(new java.io.FileReader("entrada.ss"));
-            parser p = new parser(lexer); // Usa constructor generado por CUP
-            setScanner(lexer);            // Inicializa scanner aparte
+            parser p = new parser(lexer);  // ✅ "parser" en minúscula
             p.parse();
             System.out.println("\nCódigo analizado correctamente.");
         } catch (Exception e) {
@@ -38,7 +41,6 @@ parser code
         }
     }
 :};
-
 action code
 {:
 :};
@@ -79,7 +81,12 @@ sentencia ::= DEFINE ID:id ASSIGN expr:e SEMI
             {: String l1 = newLabel(), l2 = newLabel(); RESULT = s1 + l1 + ":\n" + "if not " + e + " goto " + l2 + "\n" + b + s2 + "goto " + l1 + "\n" + l2 + ":\n"; :}
            | FUNCTION ID:id LPAREN lista_parametros:lp RPAREN bloque_return:br END
             {: RESULT = "function " + id + "(" + lp + ")\n" + br + "end\n"; :}
-           | error SEMI {: RESULT = "// Error en línea " + parser.getLine() + "\n"; :};
+           | error SEMI
+           {:
+              int linea = getLine();
+              System.err.println("Error de sintaxis en línea " + linea);
+              RESULT = "// Error en línea " + linea + "\\n";
+           :};
 
 lista_elseif ::= lista_elseif ELSEIF expr:e DO bloque:b {: RESULT = "else if " + e + " then\n" + b; :}
                | /* vacío */ {: RESULT = ""; :};
