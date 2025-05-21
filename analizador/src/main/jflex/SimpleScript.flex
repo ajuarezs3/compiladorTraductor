@@ -48,6 +48,13 @@ cadena = \"([^\"\\]|\\.)*\"
 "true"                          { return new Symbol(sym.TRUE, true); }
 "false"                         { return new Symbol(sym.FALSE, false); }
 
+// Símbolos y puntuación
+"("                             { return new Symbol(sym.LPAREN); }
+")"                             { return new Symbol(sym.RPAREN); }
+";"                             { return new Symbol(sym.SEMI); }
+","                             { return new Symbol(sym.COMMA); }
+"="                             { return new Symbol(sym.ASSIGN); }
+
 // Operadores lógicos
 "AND"                           { return new Symbol(sym.AND); }
 "OR"                            { return new Symbol(sym.OR); }
@@ -67,16 +74,12 @@ cadena = \"([^\"\\]|\\.)*\"
 "<"                             { return new Symbol(sym.LT); }
 ">"                             { return new Symbol(sym.GT); }
 
-"("                             { return new Symbol(sym.LPAREN); }
-")"                             { return new Symbol(sym.RPAREN); }
-";"                             { return new Symbol(sym.SEMI); }
-","                             { return new Symbol(sym.COMMA); }
-"="                             { return new Symbol(sym.ASSIGN); }
-
-// Otros tokens
+// Literales
 {cadena}                        { return new Symbol(sym.CADENA, yytext()); }
-{id}                           { return new Symbol(sym.ID, yytext()); }
 {numero}                       { return new Symbol(sym.NUMERO, Double.parseDouble(yytext())); }
+
+// Identificadores
+{id}                           { return new Symbol(sym.ID, yytext()); }
 
 // Ignorar espacios
 {espacio}                      { /* Ignorar espacios y saltos de línea */ }

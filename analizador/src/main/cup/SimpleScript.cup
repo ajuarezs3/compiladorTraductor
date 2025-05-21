@@ -17,10 +17,8 @@ parser code
         return "L" + (labelCount++);
     }
 
-    // Inicializa scanner directamente desde constructor generado por CUP
-    public parser(java_cup.runtime.Scanner s) {
-        super(s);
-        scanner = (AnalizadorLexico) s;
+    public static void setScanner(AnalizadorLexico s) {
+        scanner = s;
     }
 
     public static int getLine() {
@@ -30,7 +28,8 @@ parser code
     public static void main(String[] args) throws Exception {
         try {
             AnalizadorLexico lexer = new AnalizadorLexico(new java.io.FileReader("entrada.ss"));
-            parser p = new parser(lexer);
+            parser p = new parser(lexer); // Usa constructor generado por CUP
+            setScanner(lexer);            // Inicializa scanner aparte
             p.parse();
             System.out.println("\nCódigo analizado correctamente.");
         } catch (Exception e) {
