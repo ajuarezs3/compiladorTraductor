@@ -80,7 +80,7 @@ lista_sentencias ::= lista_sentencias:ls sentencia:s {: RESULT = ls + s; :}
 
 sentencia ::= DEFINE ID:id ASSIGN expr:e SEMI
             {: String t = newTemp();
-               RESULT = t + " = " + e + "\n" + id + " = " + t + "\n"; :}
+               RESULT = e + id + " = " + e + "\n"; :}
            | PRINT lista_expresiones:le SEMI
             {: String[] exps = le.split(",");
                String result = "";
@@ -102,24 +102,16 @@ sentencia ::= DEFINE ID:id ASSIGN expr:e SEMI
                         b + s2 + "goto " + l1 + "\n" + l2 + ":\n"; :}
               | FUNCTION ID:id LPAREN lista_parametros:lp RPAREN DO
                 bloque_return:br END
-                {:
-                    RESULT = "function " + id + "(" + lp + ")\n" + br + "end\n";
-                :}
+                {: RESULT = "function " + id + "(" + lp + ")\n" + br + "end\n"; :}
            | error SEMI
-           {:
-              int linea = getLine();
+           {: int linea = getLine();
               System.err.println("Error de sintaxis en línea " + linea);
-              RESULT = "// Error en línea " + linea + "\n";
-           :};
-
+              RESULT = "// Error en línea " + linea + "\n"; :};
 
 /* Producción para bloque_return */
-bloque_return ::=
-    lista_sentencias:ls RETURN expr:e SEMI
-    {:
-        String temp = newTemp();
-        RESULT = ls + temp + " = " + e + "\nreturn " + temp + "\n";
-    :};
+bloque_return ::= lista_sentencias:ls RETURN expr:e SEMI
+    {: String temp = newTemp();
+       RESULT = ls + temp + " = " + e + "\nreturn " + temp + "\n"; :};
 
 lista_elseif ::= lista_elseif:ls ELSEIF expr:e DO bloque:b
                 {: String next = newLabel();
@@ -189,7 +181,14 @@ term ::= term:left MULT factor:right
 factor ::= LPAREN expr:e RPAREN {: RESULT = e; :}
          | ID:id LPAREN lista_expresiones:args RPAREN
            {: String t = newTemp();
-              RESULT = t + " = call " + id + "(" + args + ")\n"; :}
+              String[] params = args.split(",");
+              StringBuilder code = new StringBuilder();
+              for (String p : params) {
+                  if (!p.trim().isEmpty()) code.append("param ").append(p.trim()).append("\n");
+              }
+              code.append(t).append(" = call ").append(id).append("\n");
+              RESULT = code.toString();
+           :}
          | ID:id {: RESULT = id; :}
          | ENTERO:n {: RESULT = n.toString(); :}
          | NUMERO:n {: RESULT = n.toString(); :}
