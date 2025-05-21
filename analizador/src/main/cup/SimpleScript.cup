@@ -58,13 +58,14 @@ terminal AND, OR, NOT;
 terminal PLUS, MINUS, MULT, DIV;
 terminal LEQ, GEQ, EQ, NEQ, LT, GT;
 terminal ASSIGN, SEMI, COMMA, LPAREN, RPAREN;
+terminal Integer ENTERO;
 terminal Double NUMERO;
 terminal Boolean BOOLEAN;
 terminal String ID, CADENA;
 
 /* No terminales */
 non terminal String programa, bloque, sentencia, lista_sentencias, lista_elseif, lista_expresiones, lista_parametros;
-non terminal String expr, expr_logica, expr_relacional, expr_aritmetica, term, factor;
+non terminal String expr, expr_logica, expr_relacional, expr_aritmetica, term, factor, bloque_return;
 
 /* Inicio */
 start with programa;
@@ -99,12 +100,9 @@ sentencia ::= DEFINE ID:id ASSIGN expr:e SEMI
             {: String l1 = newLabel(), l2 = newLabel();
                RESULT = s1 + l1 + ":\n" + "if not " + e + " goto " + l2 + "\n" +
                         b + s2 + "goto " + l1 + "\n" + l2 + ":\n"; :}
-           | FUNCTION ID:id LPAREN lista_parametros:lp RPAREN
-               bloque:blk RETURN expr:e SEMI END
+             | FUNCTION ID:id LPAREN lista_parametros:lp RPAREN DO bloque_return:br END
              {:
-               String temp = newTemp();
-               RESULT = "function " + id + "(" + lp + ")\n" + blk +
-                        temp + " = " + e + "\nreturn " + temp + "\nend\n";
+               RESULT = "function " + id + "(" + lp + ")\n" + br + "end\n";
              :}
            | error SEMI
            {:
@@ -112,6 +110,15 @@ sentencia ::= DEFINE ID:id ASSIGN expr:e SEMI
               System.err.println("Error de sintaxis en línea " + linea);
               RESULT = "// Error en línea " + linea + "\n";
            :};
+
+
+/* Producción para bloque_return */
+bloque_return ::=
+    lista_sentencias:ls RETURN expr:e SEMI
+    {:
+        String temp = newTemp();
+        RESULT = ls + temp + " = " + e + "\nreturn " + temp + "\n";
+    :};
 
 lista_elseif ::= lista_elseif:ls ELSEIF expr:e DO bloque:b
                 {: String next = newLabel();
@@ -183,6 +190,7 @@ factor ::= LPAREN expr:e RPAREN {: RESULT = e; :}
            {: String t = newTemp();
               RESULT = t + " = call " + id + "(" + args + ")\n"; :}
          | ID:id {: RESULT = id; :}
+         | ENTERO:n {: RESULT = n.toString(); :}
          | NUMERO:n {: RESULT = n.toString(); :}
          | BOOLEAN:b {: RESULT = b.toString(); :}
          | CADENA:c {: RESULT = "\"" + c + "\""; :};

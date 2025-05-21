@@ -83,8 +83,8 @@ Identifier = [a-zA-Z_][a-zA-Z0-9_]*
     
     /* Literales */
     {BooleanLiteral} { return symbol(sym.BOOLEAN, Boolean.valueOf(yytext())); }
-    {IntegerLiteral} { return symbol(sym.NUMERO, Integer.valueOf(yytext())); }
-    {FloatLiteral}   { return symbol(sym.NUMERO, Double.valueOf(yytext())); }
+    {IntegerLiteral} { return symbol(sym.ENTERO, new Integer(yytext())); }
+    {FloatLiteral} { return symbol(sym.NUMERO, new Double(yytext())); }
     {StringLiteral}  { return symbol(sym.CADENA, yytext().substring(1, yytext().length()-1)); }
     {Identifier}     { return symbol(sym.ID, yytext()); }
     
