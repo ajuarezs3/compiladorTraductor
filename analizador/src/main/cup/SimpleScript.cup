@@ -100,10 +100,11 @@ sentencia ::= DEFINE ID:id ASSIGN expr:e SEMI
             {: String l1 = newLabel(), l2 = newLabel();
                RESULT = s1 + l1 + ":\n" + "if not " + e + " goto " + l2 + "\n" +
                         b + s2 + "goto " + l1 + "\n" + l2 + ":\n"; :}
-             | FUNCTION ID:id LPAREN lista_parametros:lp RPAREN DO bloque_return:br END
-             {:
-               RESULT = "function " + id + "(" + lp + ")\n" + br + "end\n";
-             :}
+              | FUNCTION ID:id LPAREN lista_parametros:lp RPAREN DO
+                bloque_return:br END
+                {:
+                    RESULT = "function " + id + "(" + lp + ")\n" + br + "end\n";
+                :}
            | error SEMI
            {:
               int linea = getLine();
