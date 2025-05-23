@@ -41,7 +41,17 @@ ELSE
     PRINT "Condición lógica falsa";
 END
 
-DEFINE i = 0;
+
+DEFINE x = 15;
+
+IF x > 20 THEN
+PRINT "Mayor que 20";
+ELSEIF x > 10 THEN
+PRINT "Mayor que 10 pero menor o igual a 20";
+ELSE
+PRINT "10 o menor";
+END
+
 
 LOOP (i = 0; i < 3; i = i + 1) DO
     PRINT "Iteración número:", i;

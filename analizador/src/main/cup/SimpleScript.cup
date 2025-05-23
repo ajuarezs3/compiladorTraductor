@@ -26,8 +26,11 @@ terminal Double NUMERO;
 terminal Boolean BOOLEAN;
 terminal String ID, CADENA;
 
+
+
 non terminal programa, lista_elementos, elemento, bloque, sentencia, lista_sentencias, lista_elseif, lista_parametros, lista_expresiones;
 non terminal expr, expr_logica, expr_relacional, expr_aritmetica, term, factor, bloque_return;
+non terminal expr_simple;
 
 precedence left OR;
 precedence left AND;
@@ -37,6 +40,8 @@ precedence right NOT;
 start with programa;
 
 programa ::= lista_elementos;
+expr_simple ::= ID ASSIGN expr;
+
 
 lista_elementos ::= lista_elementos elemento
                   | elemento;
@@ -67,7 +72,7 @@ sentencia ::= DEFINE ID ASSIGN expr SEMI
             | PRINT lista_expresiones SEMI
             | IF expr THEN bloque lista_elseif ELSE bloque END
             | WHILE expr DO bloque END
-            | LOOP LPAREN sentencia expr SEMI sentencia RPAREN DO bloque END
+            | LOOP LPAREN expr_simple SEMI expr SEMI expr_simple RPAREN DO bloque END
             | error SEMI
               {:
                  report_error("Invalid statement", null);
