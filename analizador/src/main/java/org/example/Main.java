@@ -20,7 +20,7 @@ public class Main {
 
             System.out.println("✅ El código es sintácticamente válido.");
         } catch (Exception e) {
-            System.err.println("❌ Error durante el análisis:");
+            System.err.println(e.getMessage());
 //            e.printStackTrace();
         }
     }

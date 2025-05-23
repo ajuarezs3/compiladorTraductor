@@ -7,6 +7,11 @@ parser code {:
     public parser(AnalizadorLexico s) {
         super(s);
     }
+
+    @Override
+    public void report_error(String message, Object info) {
+        throw new RuntimeException("Error de sintaxis: " + message);
+    }
 :};
 
 terminal DEFINE, PRINT, IF, ELSE, ELSEIF, WHILE, LOOP, FUNCTION, RETURN, END, DO;
@@ -32,7 +37,10 @@ lista_elementos ::= lista_elementos elemento
 elemento ::= sentencia
            | FUNCTION ID LPAREN lista_parametros RPAREN DO bloque_return END
            | FUNCTION ID LPAREN lista_parametros RPAREN SEMI
-             {: System.err.println("Error: se encontró ';' después de la cabecera de FUNCTION. Use 'DO' en su lugar."); :};
+             {:
+                System.err.println("Error de sintaxis en una sentencia.");
+                RESULT = null;
+             :};
 
 bloque ::= lista_sentencias;
 
@@ -46,7 +54,10 @@ sentencia ::= DEFINE ID ASSIGN expr SEMI
             | WHILE expr DO bloque END
             | LOOP LPAREN sentencia expr SEMI sentencia RPAREN DO bloque END
             | error SEMI
-            {: System.err.println("Error de sintaxis en una sentencia. Línea " + ((Symbol) $1).left); :};
+              {:
+                 System.err.println("Error de sintaxis en una sentencia.");
+                     RESULT = null;
+              :};
 
 bloque_return ::= lista_sentencias RETURN expr SEMI;
 
