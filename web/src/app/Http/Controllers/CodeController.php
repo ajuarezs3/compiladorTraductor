@@ -18,6 +18,8 @@ class CodeController extends Controller
             'content' => 'required|string',
         ]);
 
+        dd($request->all());
+
         Code::create([
             'content' => $request->input('content'),
             'result' => null // You can later update this with Java output
