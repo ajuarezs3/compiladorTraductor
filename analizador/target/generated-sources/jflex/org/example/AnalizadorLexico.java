@@ -779,7 +779,7 @@ public class AnalizadorLexico implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { System.err.println("Caracter invalido: " + yytext()); return new Symbol(sym.error,yytext());
+            { System.err.println("Caracter invalido: " + yytext()); return getToken(sym.error, yytext());
             }
           // fall through
           case 39: break;
@@ -789,182 +789,182 @@ public class AnalizadorLexico implements java_cup.runtime.Scanner {
           // fall through
           case 40: break;
           case 3:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.LPAREN, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.LPAREN, yytext());
             }
           // fall through
           case 41: break;
           case 4:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.RPAREN, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.RPAREN, yytext());
             }
           // fall through
           case 42: break;
           case 5:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.MULT, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.MULT, yytext());
             }
           // fall through
           case 43: break;
           case 6:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.PLUS, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.PLUS, yytext());
             }
           // fall through
           case 44: break;
           case 7:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.COMMA, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.COMMA, yytext());
             }
           // fall through
           case 45: break;
           case 8:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.MINUS, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.MINUS, yytext());
             }
           // fall through
           case 46: break;
           case 9:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.DIV, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.DIV, yytext());
             }
           // fall through
           case 47: break;
           case 10:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.ENTERO, Integer.parseInt(yytext()));
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.ENTERO, Integer.parseInt(yytext()));
             }
           // fall through
           case 48: break;
           case 11:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.SEMI, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.SEMI, yytext());
             }
           // fall through
           case 49: break;
           case 12:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.LT, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.LT, yytext());
             }
           // fall through
           case 50: break;
           case 13:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.ASSIGN, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.ASSIGN, yytext());
             }
           // fall through
           case 51: break;
           case 14:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.GT, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.GT, yytext());
             }
           // fall through
           case 52: break;
           case 15:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.ID, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.ID, yytext());
             }
           // fall through
           case 53: break;
           case 16:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.NEQ, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.NEQ, yytext());
             }
           // fall through
           case 54: break;
           case 17:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.CADENA, yytext().substring(1, yytext().length() - 1));
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.CADENA, yytext().substring(1, yytext().length() - 1));
             }
           // fall through
           case 55: break;
           case 18:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.LEQ, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.LEQ, yytext());
             }
           // fall through
           case 56: break;
           case 19:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.EQ, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.EQ, yytext());
             }
           // fall through
           case 57: break;
           case 20:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.GEQ, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.GEQ, yytext());
             }
           // fall through
           case 58: break;
           case 21:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.DO, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.DO, yytext());
             }
           // fall through
           case 59: break;
           case 22:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.IF, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.IF, yytext());
             }
           // fall through
           case 60: break;
           case 23:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.OR, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.OR, yytext());
             }
           // fall through
           case 61: break;
           case 24:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.NUMERO, Double.parseDouble(yytext()));
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.NUMERO, Double.parseDouble(yytext()));
             }
           // fall through
           case 62: break;
           case 25:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.AND, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.AND, yytext());
             }
           // fall through
           case 63: break;
           case 26:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.END, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.END, yytext());
             }
           // fall through
           case 64: break;
           case 27:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.NOT, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.NOT, yytext());
             }
           // fall through
           case 65: break;
           case 28:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.ELSE, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.ELSE, yytext());
             }
           // fall through
           case 66: break;
           case 29:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.LOOP, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.LOOP, yytext());
             }
           // fall through
           case 67: break;
           case 30:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.THEN, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.THEN, yytext());
             }
           // fall through
           case 68: break;
           case 31:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.BOOLEAN, true);
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.BOOLEAN, true);
             }
           // fall through
           case 69: break;
           case 32:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.PRINT, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.PRINT, yytext());
             }
           // fall through
           case 70: break;
           case 33:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.WHILE, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.WHILE, yytext());
             }
           // fall through
           case 71: break;
           case 34:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.BOOLEAN, false);
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.BOOLEAN, false);
             }
           // fall through
           case 72: break;
           case 35:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.DEFINE, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.DEFINE, yytext());
             }
           // fall through
           case 73: break;
           case 36:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.ELSEIF, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.ELSEIF, yytext());
             }
           // fall through
           case 74: break;
           case 37:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.RETURN, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.RETURN, yytext());
             }
           // fall through
           case 75: break;
           case 38:
-            { imprimirLexema(yytext(), yycolumn, yyline ); return new Symbol(sym.FUNCTION, yytext());
+            { imprimirLexema(yytext(), yycolumn, yyline ); return getToken(sym.FUNCTION, yytext());
             }
           // fall through
           case 76: break;
