@@ -42,11 +42,9 @@ class CodeController extends Controller
 
         // 5. Redirigir con mensaje
         if ($process->isSuccessful()) {
-            return back()->with('success', 'Código válido. Resultado: ' . $result);
+            return back()->with('success', 'Codigo valido.');
         } else {
-            return back()->withErrors([
-                'content' => 'Error de análisis: ' . $result,
-            ])->withInput();
+            return back()->with('error', 'Codigo Invalido');
         }
     }
 }
