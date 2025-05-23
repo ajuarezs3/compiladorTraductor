@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Code extends Model
 {
     use HasFactory;
+    protected $table = 'codes';
+    protected $fillable = ["content", "result"];
 }

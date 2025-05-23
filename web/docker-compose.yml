@@ -1,6 +1,8 @@
 services:
   web:
-    image: registry.gitlab.com/images8975103/laravel11:1.0.9
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: "compi-web"
     ports:
       - "83:80"
@@ -15,7 +17,7 @@ services:
       - DB_DATABASE=${DATABASE_NAME}
       - DB_USERNAME=${DATABASE_USER}
       - DB_PASSWORD=${DATABASE_ROOT_PASSWORD}
-      - GENERATE_ALWAYS=${GENERATE_ALWAYS}
+      - GENERATE_ALWAYS=false
     depends_on:
       - db
     networks:

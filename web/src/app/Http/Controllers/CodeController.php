@@ -22,8 +22,8 @@ class CodeController extends Controller
 
         $content = $request->input('content');
 
-        // 2. Ejecutar el .jar con Java
-        $process = Process::fromShellCommandline('java -jar /ruta/a/analizador.jar');
+        $jarPath = storage_path('app/analizador-1.0-SNAPSHOT.jar');
+        $process = Process::fromShellCommandline("java -jar \"$jarPath\"");
         $process->setInput($content);
         $process->run();
 
