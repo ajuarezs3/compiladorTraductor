@@ -57,8 +57,9 @@ La aplicación permite:
 │   │   └── parser.cup
 │   └── target/compilador.jar
 ├── web/
-│   ├── routes/web.php
-│   ├── resources/views/
-│   ├── app/Http/Controllers/CodeController.php
-│   └── public/storage/app/analizador-1.0-SNAPSHOT.jar
+    └── src/
+        ├── routes/web.php
+        ├── resources/views/
+        ├── app/Http/Controllers/CodeController.php
+        └── public/storage/app/analizador-1.0-SNAPSHOT.jar
 └── README.md
