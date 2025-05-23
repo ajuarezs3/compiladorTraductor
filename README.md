@@ -4,6 +4,14 @@ Este proyecto consiste en la implementación de un compilador educativo para el 
 
 ---
 
+## [![Docs](https://img.shields.io/badge/Documentation-PDF-blue)](https://github.com/ajuarezs3/compiladorTraductor/blob/main/documentacion.pdf)
+
+Puedes consultar la documentación técnica completa del proyecto dando click en PDF (definición del lenguaje, gramática, pruebas y arquitectura del sistema) en el siguiente enlace:
+
+> Incluye: definición del lenguaje, tokens, gramática, implementación léxica y sintáctica, interfaz web y pruebas.
+
+---
+
 ## 🚀 Tecnologías utilizadas
 
 [![Minimum PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue)](https://www.php.net/)
@@ -30,15 +38,6 @@ Este proyecto consiste en la implementación de un compilador educativo para el 
 - **DataTables** – Visualización de entradas previas
 - **Interacción con el compilador Java** – mediante ejecución de un `.jar` desde Laravel
 
----
-
-## [![Docs](https://img.shields.io/badge/Documentation-PDF-blue)](https://github.com/ajuarezs3/compiladorTraductor/blob/main/documentacion.pdf)
-
-Puedes consultar la documentación técnica completa del proyecto dando click en PDF (definición del lenguaje, gramática, pruebas y arquitectura del sistema) en el siguiente enlace:
-
-> Incluye: definición del lenguaje, tokens, gramática, implementación léxica y sintáctica, interfaz web y pruebas.
-
----
 
 ## 📷 Interfaz
 
