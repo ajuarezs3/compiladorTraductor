@@ -81,7 +81,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>1.0</version>
+                <version>3.3.0</version> <!-- Usa una versión actual -->
                 <configuration>
                     <archive>
                         <manifest>
