@@ -1,7 +1,10 @@
-# 🛠️ Compilador SimpleScript
+# Compilador SimpleScript
 
+Este proyecto consiste en la implementación de un compilador educativo para el lenguaje inventado **SimpleScript**, desarrollado como parte de un curso de compiladores. Incluye un analizador léxico y sintáctico, generación de código intermedio y una interfaz web para probar código directamente.
 
-# 🛠️ Compilador SimpleScript
+---
+
+## 🚀 Tecnologías utilizadas
 
 [![Minimum PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-9.x-red)](https://laravel.com/)
@@ -11,17 +14,11 @@
 [![CUP](https://img.shields.io/badge/CUP-11b-lightgrey)](http://www2.cs.tum.edu/projects/cup/)
 
 
-Este proyecto consiste en la implementación de un compilador educativo para el lenguaje inventado **SimpleScript**, desarrollado como parte de un curso de compiladores. Incluye un analizador léxico y sintáctico, generación de código intermedio y una interfaz web para probar código directamente.
-
----
-
-## 🚀 Tecnologías utilizadas
 
 ### 🔧 Back-End del compilador
 - **Java 21**
 - **JFlex** – Analizador léxico
 - **CUP (Constructor of Useful Parsers)** – Analizador sintáctico
-- **Three Address Code (TAC)** – Traducción a código intermedio
 
 ### 🌐 Interfaz Web
 - **Laravel 9** – Framework PHP
@@ -36,10 +33,7 @@ Este proyecto consiste en la implementación de un compilador educativo para el 
 
 Puedes consultar la documentación técnica completa del proyecto (definición del lenguaje, gramática, pruebas y arquitectura del sistema) en el siguiente enlace:
 
-
-🔗 [Ver documentación en GitHub](https://github.com/usuario/repositorio/docs/SimpleScript_Documentacion_Tecnica.pdf)
-
-> Incluye: definición del lenguaje, tokens, gramática, implementación léxica y sintáctica, TAC, interfaz web y pruebas.
+> Incluye: definición del lenguaje, tokens, gramática, implementación léxica y sintáctica, interfaz web y pruebas.
 
 ---
 
