@@ -1,0 +1,43 @@
+services:
+  web:
+    image: registry.gitlab.com/images8975103/laravel11:1.0.9
+    container_name: "compi-web"
+    ports:
+      - "83:80"
+    volumes:
+      - ./src/:/var/www/html
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=${DATABASE_NAME}
+      - DB_USERNAME=${DATABASE_USER}
+      - DB_PASSWORD=${DATABASE_ROOT_PASSWORD}
+      - GENERATE_ALWAYS=${GENERATE_ALWAYS}
+    depends_on:
+      - db
+    networks:
+      - compi-app
+  db:
+    image: mysql:8.1
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_ROOT_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_ROOT_HOST: '%'
+      TZ: 'America/Guatemala'
+    command: mysqld --sql_mode="" --character-set-server=latin1 --collation-server=latin1_swedish_ci --innodb-flush-log-at-trx-commit=0
+    networks:
+      - compi-app
+networks:
+  compi-app:
+    driver: bridge
+
