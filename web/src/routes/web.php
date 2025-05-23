@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', [CodeController::class, 'dashboard'])->name('dashboard');
+    Route::get('/three', [CodeController::class, 'dashboard'])->name('three');
     Route::post('/submit-code', [CodeController::class, 'store'])->name('submit.code');
 });
 
