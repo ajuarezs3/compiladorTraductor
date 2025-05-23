@@ -55,7 +55,24 @@ La aplicación permite:
 │   │   ├── Main.java
 │   │   ├── AnalizadorLexico.flex
 │   │   └── parser.cup
-│   └── target/compilador.jar
+│   └──  target/
+        ├── classes/
+        │   └── org/example/
+        │       ├── AnalizadorLexico.class
+        │       ├── Main.class
+        │       ├── parser.class
+        │       └── sym.class
+        ├── generated-sources/
+        │   ├── annotations/
+        │   ├── cup/org/example/
+        │   │   ├── parser.java
+        │   │   └── sym.java
+        │   └── jflex/org/example/
+        │       └── AnalizadorLexico.java
+        ├── maven-archiver/
+        ├── maven-status/maven-compiler-plugin/
+        ├── analizador-1.0-SNAPSHOT.jar
+        └── analizador-1.0-SNAPSHOT-jar-with-dependencies.jar
 ├── web/
     └── src/
         ├── routes/web.php
