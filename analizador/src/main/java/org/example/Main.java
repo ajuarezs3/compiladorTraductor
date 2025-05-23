@@ -12,7 +12,7 @@ public class Main {
             parser parser = new parser(lexer);
             Symbol resultado = parser.parse();
 
-            System.out.println("El codigo es sintácticamente valido.");
+            System.out.println("El codigo es sintacticamente valido.");
             System.exit(0);
         } catch (Exception e) {
             System.err.println("Error de analisis: " + e.getMessage());

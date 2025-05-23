@@ -16,7 +16,7 @@ import org.example.sym;
     public void imprimirLexema(String lexema, long columna, int linea) {
         System.out.println("Lexema:" + lexema +
                           " Columna: " + columna +
-                          " Línea: " + linea);
+                          " Linea: " + linea);
     }
 
     public Symbol getToken(int tipo, Object valor) {
