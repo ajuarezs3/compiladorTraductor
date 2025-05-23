@@ -41,4 +41,10 @@ ELSE
     PRINT "Condición lógica falsa";
 END
 
+DEFINE i = 0;
+
+LOOP (i = 0; i < 3; i = i + 1) DO
+    PRINT "Iteración número:", i;
+END
+
 
