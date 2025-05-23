@@ -25,6 +25,7 @@ import org.example.sym;
 "RETURN"            { return new Symbol(sym.RETURN); }
 "END"               { return new Symbol(sym.END); }
 "DO"                { return new Symbol(sym.DO); }
+"THEN"              { return new Symbol(sym.THEN); }
 
 "AND"               { return new Symbol(sym.AND); }
 "OR"                { return new Symbol(sym.OR); }
@@ -56,5 +57,5 @@ import org.example.sym;
 \"([^\"\n]*)\"    { return new Symbol(sym.CADENA, yytext().substring(1, yytext().length() - 1)); }
 [a-zA-Z_][a-zA-Z0-9_]* { return new Symbol(sym.ID, yytext()); }
 
-[\t\r\n ]+          { /* ignorar espacios */ }
+[\s]+               { /* ignorar cualquier espacio o línea vacía */ }
 .                   { System.err.println("Carácter inválido: " + yytext()); return new Symbol(sym.error); }

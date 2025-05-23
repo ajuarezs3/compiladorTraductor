@@ -12,11 +12,11 @@ parser code {:
     public void report_error(String message, Object info) {
         Symbol sym = (Symbol) info;
         int line = sym != null ? sym.left + 1 : -1;
-        throw new RuntimeException("Error de sintaxis en línea " + line + ": " + message);
+        throw new RuntimeException("Syntax error at line " + line + ": " + message);
     }
 :};
 
-terminal DEFINE, PRINT, IF, ELSE, ELSEIF, WHILE, LOOP, FUNCTION, RETURN, END, DO;
+terminal DEFINE, PRINT, IF, ELSE, ELSEIF, WHILE, LOOP, FUNCTION, RETURN, END, DO, THEN;
 terminal AND, OR, NOT;
 terminal PLUS, MINUS, MULT, DIV;
 terminal LEQ, GEQ, EQ, NEQ, LT, GT;
@@ -26,12 +26,22 @@ terminal Double NUMERO;
 terminal Boolean BOOLEAN;
 terminal String ID, CADENA;
 
+
+
 non terminal programa, lista_elementos, elemento, bloque, sentencia, lista_sentencias, lista_elseif, lista_parametros, lista_expresiones;
 non terminal expr, expr_logica, expr_relacional, expr_aritmetica, term, factor, bloque_return;
+non terminal expr_simple;
+
+precedence left OR;
+precedence left AND;
+precedence right NOT;
+
 
 start with programa;
 
 programa ::= lista_elementos;
+expr_simple ::= ID ASSIGN expr;
+
 
 lista_elementos ::= lista_elementos elemento
                   | elemento;
@@ -40,14 +50,15 @@ elemento ::= sentencia
            | FUNCTION ID LPAREN lista_parametros RPAREN bloque_return END
            | FUNCTION ID LPAREN lista_parametros RPAREN SEMI
              {:
-                report_error("no se permite ';' en cabecera de función", null);
+                report_error("';' not allowed after FUNCTION declaration", null);
                 RESULT = null;
              :};
 
 bloque_return ::= lista_sentencias RETURN expr SEMI
+                | RETURN expr SEMI
                 | error
                   {:
-                     report_error("bloque de retorno inválido", null);
+                     report_error("Invalid function return block", null);
                      RESULT = null;
                   :};
 
@@ -59,16 +70,16 @@ lista_sentencias ::= lista_sentencias sentencia
 sentencia ::= DEFINE ID ASSIGN expr SEMI
             | ID ASSIGN expr SEMI
             | PRINT lista_expresiones SEMI
-            | IF expr DO bloque lista_elseif ELSE bloque END
+            | IF expr THEN bloque lista_elseif ELSE bloque END
             | WHILE expr DO bloque END
-            | LOOP LPAREN sentencia expr SEMI sentencia RPAREN DO bloque END
+            | LOOP LPAREN expr_simple SEMI expr SEMI expr_simple RPAREN DO bloque END
             | error SEMI
               {:
-                 report_error("sentencia inválida", null);
+                 report_error("Invalid statement", null);
                  RESULT = null;
               :};
 
-lista_elseif ::= lista_elseif ELSEIF expr DO bloque
+lista_elseif ::= lista_elseif ELSEIF expr THEN bloque
                | /* vacío */;
 
 lista_parametros ::= lista_parametros COMMA ID
@@ -80,10 +91,11 @@ lista_expresiones ::= lista_expresiones COMMA expr
 
 expr ::= expr_logica;
 
-expr_logica ::= expr_logica AND expr_relacional
-              | expr_logica OR expr_relacional
-              | NOT expr_relacional
+expr_logica ::= expr_logica AND expr_logica
+              | expr_logica OR expr_logica
+              | NOT expr_logica
               | expr_relacional;
+
 
 expr_relacional ::= expr_aritmetica LT expr_aritmetica
                   | expr_aritmetica GT expr_aritmetica
