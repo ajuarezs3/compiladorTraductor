@@ -13,6 +13,10 @@ FUNCTION factorial(n)
     RETURN resultado;
 END
 
+FUNCTION sumar(a, b)
+    RETURN a + b;
+END
+
 DEFINE x = 5;
 DEFINE y = 10;
 DEFINE suma = sumar(x, y);
