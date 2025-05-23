@@ -30,7 +30,9 @@ lista_elementos ::= lista_elementos elemento
                   | elemento;
 
 elemento ::= sentencia
-           | FUNCTION ID LPAREN lista_parametros RPAREN DO bloque_return END;
+           | FUNCTION ID LPAREN lista_parametros RPAREN DO bloque_return END
+           | FUNCTION ID LPAREN lista_parametros RPAREN SEMI
+             {: System.err.println("Error: se encontró ';' después de la cabecera de FUNCTION. Use 'DO' en su lugar."); :};
 
 bloque ::= lista_sentencias;
 
@@ -38,20 +40,22 @@ lista_sentencias ::= lista_sentencias sentencia
                    | sentencia;
 
 sentencia ::= DEFINE ID ASSIGN expr SEMI
+            | ID ASSIGN expr SEMI
             | PRINT lista_expresiones SEMI
             | IF expr DO bloque lista_elseif ELSE bloque END
             | WHILE expr DO bloque END
             | LOOP LPAREN sentencia expr SEMI sentencia RPAREN DO bloque END
-            | error SEMI;
+            | error SEMI
+            {: System.err.println("Error de sintaxis en una sentencia. Línea " + ((Symbol) $1).left); :};
 
 bloque_return ::= lista_sentencias RETURN expr SEMI;
 
 lista_elseif ::= lista_elseif ELSEIF expr DO bloque
-               | /* vacío */ ;
+               | /* vacío */;
 
 lista_parametros ::= lista_parametros COMMA ID
                    | ID
-                   | /* vacío */ ;
+                   | /* vacío */;
 
 lista_expresiones ::= lista_expresiones COMMA expr
                     | expr;

@@ -14,9 +14,6 @@ import org.example.sym;
 
 %%
 
-
-
-
 "DEFINE"            { return new Symbol(sym.DEFINE); }
 "PRINT"             { return new Symbol(sym.PRINT); }
 "IF"                { return new Symbol(sym.IF); }
@@ -55,8 +52,8 @@ import org.example.sym;
 ")"                 { return new Symbol(sym.RPAREN); }
 
 [0-9]+              { return new Symbol(sym.ENTERO, Integer.parseInt(yytext())); }
-[0-9]+"."[0-9]+     { return new Symbol(sym.NUMERO, Double.parseDouble(yytext())); }
-\"([^\"\n]*)\"      { return new Symbol(sym.CADENA, yytext().substring(1, yytext().length() - 1)); }
+[0-9]+\.[0-9]+      { return new Symbol(sym.NUMERO, Double.parseDouble(yytext())); }
+\"([^\"\n]*)\"    { return new Symbol(sym.CADENA, yytext().substring(1, yytext().length() - 1)); }
 [a-zA-Z_][a-zA-Z0-9_]* { return new Symbol(sym.ID, yytext()); }
 
 [\t\r\n ]+          { /* ignorar espacios */ }
