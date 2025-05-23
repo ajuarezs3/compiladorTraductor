@@ -325,12 +325,21 @@ public class parser extends java_cup.runtime.lr_parser {
         super(s);
     }
 
-    @Override
-    public void report_error(String message, Object info) {
-        Symbol sym = (Symbol) info;
-        int line = sym != null ? sym.left + 1 : -1;
-        throw new RuntimeException("Syntax error at line " + line + ": " + message);
-    }
+   @Override
+   public void report_error(String message, Object info) {
+       if (info instanceof Symbol sym && sym.value != null) {
+           if (!sym.value.toString().contains("ilegal")) {
+               String errorMsg = "Error en linea " + (sym.left + 1) +", columna " + (sym.right + 1) + ": simbolo no esperado -> '" + sym.value + "'";
+               System.err.println(errorMsg);
+               throw new RuntimeException(errorMsg);
+           }
+       } else {
+           String fallback = "Error : simbolo no reconocido o vacio.";
+           System.err.println(fallback);
+           throw new RuntimeException(fallback);
+       }
+   }
+
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
