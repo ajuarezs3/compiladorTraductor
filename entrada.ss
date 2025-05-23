@@ -1,7 +1,10 @@
-FUNCTION sumar(a, b)
-RETURN a + b;
+FUNCTION factorial DEFINE resultado = 1; WHILE n > 1 DO
+resultado = resultado * n;
+n = n - 1;
 END
-DEFINE x = 10;
-DEFINE y = 20;
-DEFINE resultado = sumar(x, y);
-PRINT "La suma es: ", resultado;
+RETURN resultado;
+END
+
+DEFINE num = 5;
+DEFINE fact = factorial(num);
+PRINT "El factorial de ", num, " es ", fact;
