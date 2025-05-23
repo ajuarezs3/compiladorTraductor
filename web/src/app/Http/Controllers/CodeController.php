@@ -10,7 +10,8 @@ class CodeController extends Controller
 {
     public function dashboard()
     {
-        return view('dashboard');
+        $inputs = Code::latest()->get();
+        return view('dashboard',  compact('inputs'));
     }
 
     public function store(Request $request)
