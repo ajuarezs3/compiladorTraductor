@@ -1,27 +1,27 @@
 package org.example;
 
-import java.io.*;
+import java.io.FileReader;
+import java_cup.runtime.Symbol;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            System.out.println("Analizador léxico inicializado correctamente");
+            // Cambia "entrada.ss" por el nombre del archivo que quieras analizar
+            FileReader archivo = new FileReader("entrada.ss");
 
-            Reader input = new FileReader("entrada.ss");
+            // Instancia del analizador léxico
+            AnalizadorLexico lexer = new AnalizadorLexico(archivo);
 
-            AnalizadorLexico lexer = new AnalizadorLexico(input);
+            // Instancia del parser (CUP)
             parser parser = new parser(lexer);
-            Object result = parser.parse().value;
 
-            System.out.println("Código válido");
-        } catch (FileNotFoundException e) {
-            System.err.println("Archivo no encontrado: " + e.getMessage());
-        } catch (IOException e) {
-            System.err.println("Error de entrada/salida: " + e.getMessage());
+            // Llamada al método parse() para procesar el archivo
+            Symbol resultado = parser.parse();
+
+            System.out.println("✅ El código es sintácticamente válido.");
         } catch (Exception e) {
-            System.err.println("Error general de análisis:" + e.getMessage());
-
+            System.err.println("❌ Error durante el análisis:");
+//            e.printStackTrace();
         }
     }
-
 }

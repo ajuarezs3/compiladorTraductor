@@ -1,53 +1,11 @@
-/* Definición del parser para SimpleScript */
 package org.example;
 
 import java_cup.runtime.*;
 import org.example.sym;
 
 parser code {:
-    public static int tempCount = 0;
-    public static int labelCount = 0;
-    private AnalizadorLexico scanner;
-
-    public static String newTemp() {
-        return "t" + (tempCount++);
-    }
-
-    public static String newLabel() {
-        return "L" + (labelCount++);
-    }
-
-    public int getLine() {
-        try {
-            return scanner != null ? scanner.getLine() : -1;
-        } catch (Exception e) {
-            return -1;
-        }
-    }
-
     public parser(AnalizadorLexico s) {
         super(s);
-        this.scanner = s;
-    }
-
-    public static void main(String[] args) throws Exception {
-        try {
-            AnalizadorLexico lexer = new AnalizadorLexico(new java.io.FileReader("entrada.ss"));
-            parser p = new parser(lexer);
-            Object result = p.parse().value;
-            System.out.println("\nCódigo analizado correctamente. Resultado:\n" + result);
-        } catch (Exception e) {
-            System.err.println("Error en el análisis del código:");
-            e.printStackTrace();
-        }
-    }
-:};
-
-action code {:
-    private String joinExpressions(String exp1, String exp2) {
-        if (exp1.isEmpty()) return exp2;
-        if (exp2.isEmpty()) return exp1;
-        return exp1 + ", " + exp2;
     }
 :};
 
@@ -61,139 +19,70 @@ terminal Double NUMERO;
 terminal Boolean BOOLEAN;
 terminal String ID, CADENA;
 
-non terminal String programa, elemento, lista_elementos, bloque, sentencia, lista_sentencias, lista_elseif, lista_expresiones, lista_parametros;
-non terminal String expr, expr_logica, expr_relacional, expr_aritmetica, term, factor, bloque_return;
+non terminal programa, lista_elementos, elemento, bloque, sentencia, lista_sentencias, lista_elseif, lista_parametros, lista_expresiones;
+non terminal expr, expr_logica, expr_relacional, expr_aritmetica, term, factor, bloque_return;
 
 start with programa;
 
-programa ::= lista_elementos:le {: RESULT = le; :};
+programa ::= lista_elementos;
 
-lista_elementos ::= lista_elementos:le elemento:e {: RESULT = le + e; :}
-                  | elemento:e {: RESULT = e; :};
+lista_elementos ::= lista_elementos elemento
+                  | elemento;
 
-elemento ::= sentencia:s {: RESULT = s; :}
-          | FUNCTION ID:id LPAREN lista_parametros:lp RPAREN DO bloque_return:br END
-          {: RESULT = "function " + id + "(" + lp + ")\n" + br + "end\n"; :};
+elemento ::= sentencia
+           | FUNCTION ID LPAREN lista_parametros RPAREN DO bloque_return END;
 
-bloque ::= lista_sentencias:ls {: RESULT = ls; :};
+bloque ::= lista_sentencias;
 
-lista_sentencias ::= lista_sentencias:ls sentencia:s {: RESULT = ls + s; :}
-                   | sentencia:s {: RESULT = s; :};
+lista_sentencias ::= lista_sentencias sentencia
+                   | sentencia;
 
-sentencia ::= DEFINE ID:id ASSIGN expr:e SEMI
-{:
-    String codigo = e;
-    String resultadoFinal = id + " = " + e + "\n";
-    int lastNewline = e.lastIndexOf("\n");
-    if (lastNewline != -1) {
-        String instrucciones = e.substring(0, lastNewline + 1);
-        String ultimaTemp = e.substring(lastNewline + 1).trim();
-        resultadoFinal = instrucciones + id + " = " + ultimaTemp + "\n";
-    }
-    RESULT = resultadoFinal;
-:}
-| PRINT lista_expresiones:le SEMI
-{: String[] exps = le.split(",");
-   String result = "";
-   for (String exp : exps) {
-       result += "print " + exp.trim() + "\n";
-   }
-   RESULT = result; :}
-| IF expr:e DO bloque:b1 lista_elseif:lei ELSE bloque:b2 END
-{: String end = newLabel(), alt = newLabel();
-   RESULT = "if " + e + " goto " + alt + "\n" + b1 + "goto " + end + "\n" +
-            alt + ":\n" + lei + b2 + end + ":\n"; :}
-| WHILE expr:e DO bloque:b END
-{: String l1 = newLabel(), l2 = newLabel();
-   RESULT = l1 + ":\n" + "if not " + e + " goto " + l2 + "\n" +
-            b + "goto " + l1 + "\n" + l2 + ":\n"; :}
-| LOOP LPAREN sentencia:s1 expr:e SEMI sentencia:s2 RPAREN DO bloque:b END
-{: String l1 = newLabel(), l2 = newLabel();
-   RESULT = s1 + l1 + ":\n" + "if not " + e + " goto " + l2 + "\n" +
-            b + s2 + "goto " + l1 + "\n" + l2 + ":\n"; :}
-| error SEMI
-{: int linea = getLine();
-   System.err.println("Error de sintaxis en línea " + linea);
-   RESULT = "// Error en línea " + linea + "\n"; :};
+sentencia ::= DEFINE ID ASSIGN expr SEMI
+            | PRINT lista_expresiones SEMI
+            | IF expr DO bloque lista_elseif ELSE bloque END
+            | WHILE expr DO bloque END
+            | LOOP LPAREN sentencia expr SEMI sentencia RPAREN DO bloque END
+            | error SEMI;
 
-bloque_return ::= lista_sentencias:ls RETURN expr:e SEMI
-{: String temp = newTemp();
-   RESULT = ls + temp + " = " + e + "\nreturn " + temp + "\n"; :};
+bloque_return ::= lista_sentencias RETURN expr SEMI;
 
-lista_elseif ::= lista_elseif:ls ELSEIF expr:e DO bloque:b
-{: String next = newLabel();
-   RESULT = ls + "if " + e + " goto " + next + "\n" + b + "goto " + next + "\n" + next + ":\n"; :}
-| /* vacío */ {: RESULT = ""; :};
+lista_elseif ::= lista_elseif ELSEIF expr DO bloque
+               | /* vacío */ ;
 
-lista_parametros ::= lista_parametros:ls COMMA ID:id {: RESULT = joinExpressions(ls, id); :}
-| ID:id {: RESULT = id; :}
-| /* vacío */ {: RESULT = ""; :};
+lista_parametros ::= lista_parametros COMMA ID
+                   | ID
+                   | /* vacío */ ;
 
-lista_expresiones ::= lista_expresiones:ls COMMA expr:e {: RESULT = joinExpressions(ls, e); :}
-| expr:e {: RESULT = e; :};
+lista_expresiones ::= lista_expresiones COMMA expr
+                    | expr;
 
-expr ::= expr_logica:e {: RESULT = e; :};
+expr ::= expr_logica;
 
-expr_logica ::= expr_logica:left AND expr_relacional:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " AND " + right + "\n"; :}
-| expr_logica:left OR expr_relacional:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " OR " + right + "\n"; :}
-| NOT expr_relacional:e
-{: String t = newTemp();
-   RESULT = e + t + " = NOT " + e + "\n"; :}
-| expr_relacional:e {: RESULT = e; :};
+expr_logica ::= expr_logica AND expr_relacional
+              | expr_logica OR expr_relacional
+              | NOT expr_relacional
+              | expr_relacional;
 
-expr_relacional ::= expr_aritmetica:left LT expr_aritmetica:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " < " + right + "\n"; :}
-| expr_aritmetica:left GT expr_aritmetica:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " > " + right + "\n"; :}
-| expr_aritmetica:left LEQ expr_aritmetica:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " <= " + right + "\n"; :}
-| expr_aritmetica:left GEQ expr_aritmetica:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " >= " + right + "\n"; :}
-| expr_aritmetica:left EQ expr_aritmetica:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " == " + right + "\n"; :}
-| expr_aritmetica:left NEQ expr_aritmetica:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " != " + right + "\n"; :}
-| expr_aritmetica:e {: RESULT = e; :};
+expr_relacional ::= expr_aritmetica LT expr_aritmetica
+                  | expr_aritmetica GT expr_aritmetica
+                  | expr_aritmetica LEQ expr_aritmetica
+                  | expr_aritmetica GEQ expr_aritmetica
+                  | expr_aritmetica EQ expr_aritmetica
+                  | expr_aritmetica NEQ expr_aritmetica
+                  | expr_aritmetica;
 
-expr_aritmetica ::= expr_aritmetica:left PLUS term:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " + " + right + "\n"; :}
-| expr_aritmetica:left MINUS term:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " - " + right + "\n"; :}
-| term:t {: RESULT = t; :};
+expr_aritmetica ::= expr_aritmetica PLUS term
+                  | expr_aritmetica MINUS term
+                  | term;
 
-term ::= term:left MULT factor:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " * " + right + "\n"; :}
-| term:left DIV factor:right
-{: String t = newTemp();
-   RESULT = left + right + t + " = " + left + " / " + right + "\n"; :}
-| factor:f {: RESULT = f; :};
+term ::= term MULT factor
+       | term DIV factor
+       | factor;
 
-factor ::= LPAREN expr:e RPAREN {: RESULT = e; :}
-| ID:id LPAREN lista_expresiones:args RPAREN
-{: String t = newTemp();
-   String[] params = args.split(",");
-   StringBuilder code = new StringBuilder();
-   for (String p : params) {
-       if (!p.trim().isEmpty()) code.append("param ").append(p.trim()).append("\n");
-   }
-   code.append(t).append(" = call ").append(id).append("\n");
-   RESULT = code.toString();
-:}
-| ID:id {: RESULT = id; :}
-| ENTERO:n {: RESULT = n.toString(); :}
-| NUMERO:n {: RESULT = n.toString(); :}
-| BOOLEAN:b {: RESULT = b.toString(); :}
-| CADENA:c {: RESULT = "\"" + c + "\""; :};
+factor ::= LPAREN expr RPAREN
+         | ID LPAREN lista_expresiones RPAREN
+         | ID
+         | ENTERO
+         | NUMERO
+         | BOOLEAN
+         | CADENA;
