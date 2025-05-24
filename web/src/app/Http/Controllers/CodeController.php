@@ -14,6 +14,12 @@ class CodeController extends Controller
         return view('dashboard',  compact('inputs'));
     }
 
+    public function show($id)
+    {
+        $code = Code::with('responses')->findOrFail($id);
+        return view('details', compact('code'));
+    }
+
     public function store(Request $request)
     {
         // 1. Validación
@@ -22,6 +28,10 @@ class CodeController extends Controller
         ]);
 
         $content = $request->input('content');
+
+        if (strlen($content) > 50000) {
+            return back()->with('error', 'El código ingresado es demasiado grande.');
+        }
 
         $jarPath = storage_path('app/analizador-1.0-SNAPSHOT.jar');
         $process = Process::fromShellCommandline("java -jar \"$jarPath\"");
@@ -33,13 +43,21 @@ class CodeController extends Controller
             ? $process->getOutput()
             : $process->getErrorOutput();
 
+        $messages = $process->isSuccessful() ? "Codigo valido" : "Codigo Invalido";
+
         $statusCode = $process->getExitCode();
 
         // 4. Guardar en la base de datos
-        Code::create([
+        $code = Code::create([
             'content' => $content,
-            'result' => $result
+            'result' => $messages
         ]);
+
+        foreach (explode("\n", $result) as $linea) {
+            if (trim($linea)) {
+                $code->responses()->create(['message' => $linea]);
+            }
+        }
 
         // 5. Redirigir con mensaje
         if ($process->isSuccessful()) {

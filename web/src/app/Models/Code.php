@@ -10,4 +10,10 @@ class Code extends Model
     use HasFactory;
     protected $table = 'codes';
     protected $fillable = ["content", "result"];
+
+    public function responses()
+    {
+        return $this->hasMany(CodeResponse::class);
+    }
+
 }
