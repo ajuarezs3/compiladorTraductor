@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [CodeController::class, 'dashboard'])->name('dashboard');
     Route::get('/three', [CodeController::class, 'dashboard'])->name('three');
     Route::post('/submit-code', [CodeController::class, 'store'])->name('submit.code');
+    Route::get('/code/{id}', [CodeController::class, 'show'])->name('code.show');
 });
 
 require __DIR__.'/auth.php';

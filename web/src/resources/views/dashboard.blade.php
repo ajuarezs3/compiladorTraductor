@@ -58,15 +58,24 @@
                                 <th class="px-4 py-2 border">Contenido</th>
                                 <th class="px-4 py-2 border">Resultado</th>
                                 <th class="px-4 py-2 border">Fecha</th>
+                                <th class="px-4 py-2 border">Accion</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach ($inputs as $input)
                                 <tr>
                                     <td class="px-4 py-2 border">{{ $input->id }}</td>
-                                    <td class="px-4 py-2 border whitespace-pre-wrap text-left text-sm text-gray-800">{{ $input->content }}</td>
+                                    <td class="px-4 py-2 border text-left text-sm text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px]">
+                                        {{ $input->content }}
+                                    </td>
                                     <td class="px-4 py-2 border whitespace-pre-wrap text-left text-sm text-gray-800">{{ $input->result }}</td>
                                     <td class="px-4 py-2 border">{{ $input->created_at->format('d/m/Y H:i') }}</td>
+                                    <td  class="px-4 py-2 border">
+                                        <a href="{{ route('code.show', $input->id) }}"
+                                           class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                                            Ver detalles
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

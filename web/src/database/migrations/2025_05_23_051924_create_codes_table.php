@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('codes', function (Blueprint $table) {
             $table->id();
-            $table->text('content');     // Código ingresado desde el textarea
+            $table->longText('content');     // Código ingresado desde el textarea
             $table->text('result')->nullable();  // Resultado de validación del compilador Java
             $table->timestamps();
         });
