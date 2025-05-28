@@ -32,6 +32,15 @@ Puedes consultar la documentación técnica completa del proyecto dando click en
 
 ### http://20.169.89.69/
 
+
+🔐 **Credenciales de prueba:**
+
+| Usuario                | Contraseña |
+|------------------------|------------|
+| ajuarezs3@miumg.edu.gt | umg        |
+
+⚠️ **Nota:** Estos accesos son solo para fines académicos y de pruebas dentro de la UMG.
+
 - **Laravel 9** – Framework PHP
 - **Blade** – Motor de plantillas
 - **Tailwind CSS** – Estilizado moderno
