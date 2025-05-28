@@ -18,8 +18,18 @@ class CodeController extends Controller
 
     public function show($id)
     {
-        $code = Code::with('responses')->findOrFail($id);
-        return view('details', compact('code'));
+
+        $code = Code::findOrFail($id);
+        $logContent = null;
+        if ($code->path_log && file_exists($code->path_log)) {
+            $logContent = file_get_contents($code->path_log);
+        }
+
+        $logEntrada = null;
+        if ($code->path_entrada && file_exists($code->path_entrada)) {
+            $logEntrada = file_get_contents($code->path_entrada);
+        }
+        return view('details', compact('code', 'logContent', 'logEntrada'));
     }
 
     public function store(Request $request)
