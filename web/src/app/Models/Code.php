@@ -9,7 +9,7 @@ class Code extends Model
 {
     use HasFactory;
     protected $table = 'codes';
-    protected $fillable = ["content", "result"];
+    protected $fillable = ["path_entrada", "path_log", "result"];
 
     public function responses()
     {

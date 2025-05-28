@@ -55,7 +55,6 @@
                             <thead class="bg-gray-100">
                             <tr>
                                 <th class="px-4 py-2 border">ID</th>
-                                <th class="px-4 py-2 border">Contenido</th>
                                 <th class="px-4 py-2 border">Resultado</th>
                                 <th class="px-4 py-2 border">Fecha</th>
                                 <th class="px-4 py-2 border">Accion</th>
@@ -65,9 +64,6 @@
                             @foreach ($inputs as $input)
                                 <tr>
                                     <td class="px-4 py-2 border">{{ $input->id }}</td>
-                                    <td class="px-4 py-2 border text-left text-sm text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px]">
-                                        {{ $input->content }}
-                                    </td>
                                     <td class="px-4 py-2 border whitespace-pre-wrap text-left text-sm text-gray-800">{{ $input->result }}</td>
                                     <td class="px-4 py-2 border">{{ $input->created_at->format('d/m/Y H:i') }}</td>
                                     <td  class="px-4 py-2 border">
