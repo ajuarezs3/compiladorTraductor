@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Code;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Storage;
 
 class CodeController extends Controller
 {
@@ -27,39 +29,51 @@ class CodeController extends Controller
             'content' => 'required|string',
         ]);
 
-        $content = $request->input('content');
+        $entradaPath = 'entrada';
+        $logPath = 'log';
 
-        if (strlen($content) > 50000) {
-            return back()->with('error', 'El código ingresado es demasiado grande.');
+        if (!Storage::exists($entradaPath)) {
+            Storage::makeDirectory($entradaPath);
         }
 
+        if (!Storage::exists($logPath)) {
+            Storage::makeDirectory($logPath);
+        }
+
+        $content = $request->input('content');
+        $name = "entrada-".Carbon::now()->timestamp.".ss";
+
+        $entradaPath = storage_path("app/entrada/$name");
+
+        file_put_contents($entradaPath, $content);
+
         $jarPath = storage_path('app/analizador-1.0-SNAPSHOT.jar');
-        $process = Process::fromShellCommandline("java -jar \"$jarPath\"");
-        $process->setInput($content);
+        $command = "java -jar \"$jarPath\" \"$entradaPath\"";
+        $process = Process::fromShellCommandline($command);
         $process->run();
 
-        // 3. Capturar el resultado
+        $name = 'file-' . now()->format('Ymd-His') . '.log';
+
+        $logPath = storage_path("app/log/$name");
+
         $result = $process->isSuccessful()
             ? $process->getOutput()
             : $process->getErrorOutput();
 
+
+
+        file_put_contents($logPath, $result);
         $messages = $process->isSuccessful() ? "Codigo valido" : "Codigo Invalido";
 
-        $statusCode = $process->getExitCode();
 
         // 4. Guardar en la base de datos
-        $code = Code::create([
-            'content' => $content,
-            'result' => $messages
-        ]);
+         Code::create([
+             'path_entrada' => $entradaPath,
+             'path_log' => $logPath,
+             'result' => $messages,
+         ]);
 
-        foreach (explode("\n", $result) as $linea) {
-            if (trim($linea)) {
-                $code->responses()->create(['message' => $linea]);
-            }
-        }
 
-        // 5. Redirigir con mensaje
         if ($process->isSuccessful()) {
             return back()->with('success', 'Codigo valido.');
         } else {
